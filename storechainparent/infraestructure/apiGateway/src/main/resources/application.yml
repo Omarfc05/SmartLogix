@@ -1,0 +1,20 @@
+server:
+  port: 8089
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+logging:
+  level:
+    org.springframework.gateway: DEBUG
+    reactor.netty.http.client: DEBUG
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: inventory_service
+          uri: lb://microservices-inventory
+          predicates:
+            - Path=/**
+          filters:
+            - AuthenticationFilterinig

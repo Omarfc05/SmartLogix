@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/storechainparent/infraestructure/apiGateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/storechainparent/infraestructure/eurekaServer/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/storechainparent/infraestructure/eurekaServer/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/storechainparent/infraestructure/keyCloakAdapter/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/storechainparent/infraestructure/springBootAdmin1/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/storechainparent/infraestructure/springBootAdmin1/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/storechainparent/infraestructure/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/storechainparent/infraestructure/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/storechainparent/microservices/order/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/storechainparent/microservices/order/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/storechainparent/microservices/shipment/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/storechainparent/microservices/shipment/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/storechainparent/microservices/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/storechainparent/microservices/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/storechainparent/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/storechainparent/src/main/resources" charset="UTF-8" />
+  </component>
+</project>
