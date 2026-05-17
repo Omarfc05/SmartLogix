@@ -1,49 +1,102 @@
 package com.storechain.order.service;
 
-import com.storechain.order.entities.Order;
-import com.storechain.order.entities.OrderDetail;
+import com.storechain.order.entities.*;
 import com.storechain.order.exception.BusinessRuleException;
 import com.storechain.order.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.List;
 
 @Service
 public class OrderService {
 
     @Autowired
-    private OrderRepository repository;
+    private OrderRepository orderRepository;
 
-    public Order create(Order order) {
+    @Autowired
+    private WebClient.Builder webClientBuilder;
 
-        if (order.getDetails() == null || order.getDetails().isEmpty()) {
-            throw new BusinessRuleException("2001",
-                    HttpStatus.BAD_REQUEST,
-                    "El pedido no puede estar vacío");
+    public Order createOrder(Order order) {
+
+        if (order.getDetails().isEmpty()) {
+            throw new BusinessRuleException("2001", HttpStatus.BAD_REQUEST, "Pedido sin productos");
         }
-
 
         for (OrderDetail detail : order.getDetails()) {
+
             if (detail.getQuantity() <= 0) {
-                throw new BusinessRuleException("2002",
-                        HttpStatus.BAD_REQUEST,
-                        "Cantidad inválida");
+                throw new BusinessRuleException("2004", HttpStatus.BAD_REQUEST, "Cantidad inválida");
             }
+
+            detail.setOrder(order);
         }
 
-        // Estado inicial
         order.setStatus("CREADO");
 
-        // Relación bidireccional
-        order.getDetails().forEach(d -> d.setOrder(order));
-
-        return repository.save(order);
+        return orderRepository.save(order);
     }
+    public Order updateStatus(Long id, String status) {
 
-    public Order getById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new BusinessRuleException("2003",
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new BusinessRuleException("2005",
                         HttpStatus.NOT_FOUND,
                         "Pedido no encontrado"));
+
+        if (status.equalsIgnoreCase("VALIDADO")) {
+
+            // validar stock
+            for (OrderDetail detail : order.getDetails()) {
+
+                InventoryResponse product = webClientBuilder.build()
+                        .get()
+                        .uri("http://localhost:8086/inventory/v1/{id}", detail.getProductId())
+                        .retrieve()
+                        .bodyToMono(InventoryResponse.class)
+                        .block();
+
+                if (product == null) {
+                    throw new BusinessRuleException("2002", HttpStatus.NOT_FOUND, "Producto no existe");
+                }
+
+                if (product.getStock() < detail.getQuantity()) {
+                    throw new BusinessRuleException("2003", HttpStatus.BAD_REQUEST, "Stock insuficiente");
+                }
+            }
+
+            order.setStatus("VALIDADO");
+        }
+
+        if (status.equalsIgnoreCase("APROBADO")) {
+
+            // descontar stock
+            for (OrderDetail detail : order.getDetails()) {
+
+                webClientBuilder.build()
+                        .put()
+                        .uri("http://localhost:8086/inventory/v1/{id}/stock?quantity=-" + detail.getQuantity(),
+                                detail.getProductId())
+                        .retrieve()
+                        .bodyToMono(Void.class)
+                        .block();
+            }
+
+            order.setStatus("APROBADO");
+        }
+
+        return orderRepository.save(order);
+    }
+    public List<Order> getAll() {
+        return orderRepository.findAll();
+    }
+    public Order getById(Long id) {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new BusinessRuleException(
+                        "2005",
+                        HttpStatus.NOT_FOUND,
+                        "Pedido no encontrado"
+                ));
     }
 }

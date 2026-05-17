@@ -5,6 +5,7 @@ import com.storechain.order.service.OrderService;
 import com.storechain.order.repository.OrderRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,12 +16,15 @@ public class OrderRestController {
     @Autowired
     private OrderService service;
 
-    @Autowired
-    private OrderRepository repository;
+    @PostMapping
+    public ResponseEntity<Order> create(@RequestBody Order order) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(service.createOrder(order));
+    }
 
     @GetMapping
     public ResponseEntity<List<Order>> list() {
-        return ResponseEntity.ok(repository.findAll());
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
@@ -28,8 +32,11 @@ public class OrderRestController {
         return ResponseEntity.ok(service.getById(id));
     }
 
-    @PostMapping
-    public ResponseEntity<Order> create(@RequestBody Order order) {
-        return ResponseEntity.ok(service.create(order));
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Order> updateStatus(
+            @PathVariable Long id,
+            @RequestParam String status) {
+
+        return ResponseEntity.ok(service.updateStatus(id, status));
     }
 }
