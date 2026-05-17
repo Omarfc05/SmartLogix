@@ -1,12 +1,12 @@
 package com.storechain.order.repository;
 
-import com.storechain.order.entities.OrderInventory;
+import com.storechain.order.entities.OrderDetail;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+public interface OrderInventoryRepository extends JpaRepository<OrderDetail, Long> {
 
-public interface OrderInventoryRepository extends JpaRepository<OrderInventory, Long>{
-    List<OrderInventory> findByCustomerId(Long orderId);
+    List<OrderDetail> findByOrderId(Long orderId);
 
-        void deleteByCustomerId(Long orderId);
+    void deleteByOrderId(Long orderId);
 }

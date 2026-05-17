@@ -1,36 +1,23 @@
 package com.storechain.order.exception;
 
-import lombok.Data;
 import org.springframework.http.HttpStatus;
 
-//Esto no era para aplicar reglas de negocio en el sistema?
-@Data
-public class BusinessRuleException extends Exception {
+public class BusinessRuleException extends RuntimeException {
 
-    public BusinessRuleException(long id, String code, HttpStatus httpStatus, String message) {
-        super(message);
-        this.id = id;
-        this.code = code;
-        this.httpStatus = httpStatus;
-    }
-    
-    public BusinessRuleException(String code, HttpStatus httpStatus, String message) {
-        super(message);
-        this.id = id;
-        this.code = code;
-        this.httpStatus = httpStatus;
-    }
-    
-     public BusinessRuleException(HttpStatus httpStatus, String message) {
-        super(message);
-        this.id = id;
-        this.code = code;
-        this.httpStatus = httpStatus;
-    }
-
-
-    private long id;
     private String code;
-    private HttpStatus httpStatus;
+    private HttpStatus status;
 
+    public BusinessRuleException(String code, HttpStatus status, String message) {
+        super(message);
+        this.code = code;
+        this.status = status;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
+    }
 }
