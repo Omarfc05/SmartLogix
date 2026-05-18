@@ -28,15 +28,15 @@ public class OrderRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Order> get(@PathVariable Long id) {
+    public ResponseEntity<Order> get(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.getById(id));
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<Order> updateStatus(
-            @PathVariable Long id,
-            @RequestParam String status) {
+    public ResponseEntity<Order> changeStatus(
+            @PathVariable("id") Long id,
+            @RequestParam("status") String status) {
 
-        return ResponseEntity.ok(service.updateStatus(id, status));
+        return ResponseEntity.ok(service.changeStatus(id, status));
     }
 }

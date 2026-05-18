@@ -40,8 +40,7 @@ public class InventoryController {
             @PathVariable("id") Long id,
             @RequestParam("quantity") int quantity) {
 
-        Product updated = service.updateStock(id, quantity);
-        return ResponseEntity.ok(updated);
+        return ResponseEntity.ok(service.updateStock(id, quantity));
     }
 
     @DeleteMapping("/{id}")
@@ -49,4 +48,5 @@ public class InventoryController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
 }

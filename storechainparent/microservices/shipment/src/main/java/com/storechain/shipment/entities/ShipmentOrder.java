@@ -13,14 +13,15 @@ import lombok.Data;
 @Entity
 @Data
 public class ShipmentOrder {
-    
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private long OrderId;
+
     private String status;
+
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY,targetEntity = Shipment.class)
-    @JoinColumn(name = "orderId",nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = true)
     private Shipment shipment;
 }

@@ -38,18 +38,16 @@ public class APIExceptionHandler {
             Exception ex,
             HttpServletRequest request) {
 
-        log.error("Error interno", ex);
+        ex.printStackTrace(); // 👈 ESTA LÍNEA AGREGA
 
         ExceptionResponse response = new ExceptionResponse(
                 "internal-error",
                 "Error interno del servidor",
                 "9999",
-                "Ha ocurrido un error inesperado",
+                ex.getMessage(),
                 request.getRequestURI()
         );
 
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(response);
+        return ResponseEntity.status(500).body(response);
     }
 }

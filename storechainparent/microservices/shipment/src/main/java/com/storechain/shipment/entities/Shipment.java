@@ -1,18 +1,21 @@
 package com.storechain.shipment.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 @Entity
 public class Shipment {
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     @Id
-    private long id;
-    private long orderId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private Long orderId;
+
     private String address;
-    private String status;
+    private String carrier;
+    private String estimatedDate;
+
+    private String status; // PENDIENTE, EN_TRANSITO, ENTREGADO
 }

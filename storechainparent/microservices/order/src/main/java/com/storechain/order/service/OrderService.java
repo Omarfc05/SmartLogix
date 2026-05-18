@@ -19,6 +19,10 @@ public class OrderService {
     @Autowired
     private WebClient.Builder webClientBuilder;
 
+    private String generateOrderNumber() {
+        return "ORD-" + System.currentTimeMillis();
+    }
+
     public Order createOrder(Order order) {
 
         if (order.getDetails().isEmpty()) {
@@ -32,59 +36,10 @@ public class OrderService {
             }
 
             detail.setOrder(order);
+            order.setOrderNumber(generateOrderNumber());
         }
 
         order.setStatus("CREADO");
-
-        return orderRepository.save(order);
-    }
-    public Order updateStatus(Long id, String status) {
-
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new BusinessRuleException("2005",
-                        HttpStatus.NOT_FOUND,
-                        "Pedido no encontrado"));
-
-        if (status.equalsIgnoreCase("VALIDADO")) {
-
-            // validar stock
-            for (OrderDetail detail : order.getDetails()) {
-
-                InventoryResponse product = webClientBuilder.build()
-                        .get()
-                        .uri("http://localhost:8086/inventory/v1/{id}", detail.getProductId())
-                        .retrieve()
-                        .bodyToMono(InventoryResponse.class)
-                        .block();
-
-                if (product == null) {
-                    throw new BusinessRuleException("2002", HttpStatus.NOT_FOUND, "Producto no existe");
-                }
-
-                if (product.getStock() < detail.getQuantity()) {
-                    throw new BusinessRuleException("2003", HttpStatus.BAD_REQUEST, "Stock insuficiente");
-                }
-            }
-
-            order.setStatus("VALIDADO");
-        }
-
-        if (status.equalsIgnoreCase("APROBADO")) {
-
-            // descontar stock
-            for (OrderDetail detail : order.getDetails()) {
-
-                webClientBuilder.build()
-                        .put()
-                        .uri("http://localhost:8086/inventory/v1/{id}/stock?quantity=-" + detail.getQuantity(),
-                                detail.getProductId())
-                        .retrieve()
-                        .bodyToMono(Void.class)
-                        .block();
-            }
-
-            order.setStatus("APROBADO");
-        }
 
         return orderRepository.save(order);
     }
@@ -98,5 +53,52 @@ public class OrderService {
                         HttpStatus.NOT_FOUND,
                         "Pedido no encontrado"
                 ));
+    }
+    public Order changeStatus(Long id, String newStatus) {
+
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new BusinessRuleException(
+                        "2004",
+                        HttpStatus.NOT_FOUND,
+                        "Pedido no encontrado"
+                ));
+
+        switch (newStatus.toUpperCase()) {
+
+            case "APROBADO":
+
+                if (!order.getStatus().equals("CREADO")) {
+                    throw new BusinessRuleException(
+                            "2005",
+                            HttpStatus.BAD_REQUEST,
+                            "Solo pedidos en estado CREADO pueden aprobarse"
+                    );
+                }
+
+                order.setStatus("APROBADO");
+                break;
+
+            case "RECHAZADO":
+
+                if (!order.getStatus().equals("CREADO")) {
+                    throw new BusinessRuleException(
+                            "2006",
+                            HttpStatus.BAD_REQUEST,
+                            "Solo pedidos en estado CREADO pueden rechazarse"
+                    );
+                }
+
+                order.setStatus("RECHAZADO");
+                break;
+
+            default:
+                throw new BusinessRuleException(
+                        "2007",
+                        HttpStatus.BAD_REQUEST,
+                        "Estado inválido"
+                );
+        }
+
+        return orderRepository.save(order);
     }
 }
