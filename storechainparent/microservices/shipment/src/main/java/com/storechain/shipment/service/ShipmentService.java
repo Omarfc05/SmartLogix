@@ -25,8 +25,11 @@ public class ShipmentService {
             );
         }
 
-        // Estado inicial del envío
+        // Estado inicial y datos de envío predeterminados
         shipment.setStatus("ENVIADO");
+        shipment.setAddress("Avenida Siempreviva 742"); // Simulamos una dirección
+        shipment.setCarrier("Chile Express"); // Transportista simulado
+        shipment.setEstimatedDate(String.valueOf(LocalDate.now().plusDays(3)));
 
         return repository.save(shipment);
     }
@@ -41,9 +44,6 @@ public class ShipmentService {
                 ));
 
         shipment.setStatus(status);
-        shipment.setAddress("Avenida Siempreviva 742");
-        shipment.setCarrier("Chile Express");
-        shipment.setEstimatedDate(String.valueOf(LocalDate.now().plusDays(3)));
 
         return repository.save(shipment);
     }

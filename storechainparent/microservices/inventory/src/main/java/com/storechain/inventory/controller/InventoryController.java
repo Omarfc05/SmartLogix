@@ -1,6 +1,7 @@
 package com.storechain.inventory.controller;
 
 import com.storechain.inventory.dto.ProductResponse;
+import com.storechain.inventory.entities.InventoryMovement;
 import com.storechain.inventory.entities.Product;
 import com.storechain.inventory.repository.ProductRepository;
 import com.storechain.inventory.service.InventoryService;
@@ -61,6 +62,22 @@ public class InventoryController {
             dto.setStock(p.getStock());
             return dto;
         }).toList();
+    }
+
+    // Endpoint para reponer stock manual
+    @PostMapping("/{id}/stock/replenish")
+    public ResponseEntity<Product> replenishStock(
+            @PathVariable("id") Long id,
+            @RequestParam("quantity") Integer quantity,
+            @RequestParam(value = "reason", required = false) String reason) {
+
+        return ResponseEntity.ok(service.addStockManual(id, quantity, reason));
+    }
+
+    // Endpoint para consultar el historial
+    @GetMapping("/{id}/movements")
+    public ResponseEntity<List<InventoryMovement>> getHistory(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(service.getProductHistory(id));
     }
 
 }
