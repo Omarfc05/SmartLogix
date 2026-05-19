@@ -16,9 +16,19 @@ export const Cart = () => {
 
     if (items.length === 0) {
         return (
-            <div className="container text-light p-4">
-                <h2>Carrito vacío</h2>
-                <p>No has agregado productos aún.</p>
+            <div className="text-center p-5 mt-5 glass-container">
+                {/* Si tienes tu foto, usa: src={require('../assets/tu-foto.png')} */}
+                <img
+                    src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png"
+                    alt="Carrito vacío"
+                    className="mb-4"
+                    style={{ width: '150px', opacity: 0.8 }}
+                />
+                <h3 className="fw-bold" style={{ color: '#0077b6' }}>¡Tu carrito está esperando!</h3>
+                <p className="text-muted mb-4">No hay productos por aquí. ¡Explora el catálogo y encuentra algo increíble!</p>
+                <a href="/" className="btn btn-bubble px-4 rounded-pill fw-bold">
+                    Ir a Productos
+                </a>
             </div>
         );
     }

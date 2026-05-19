@@ -57,3 +57,12 @@ body {
   background: linear-gradient(180deg, #ff758c 0%, #ff7eb3 100%);
   border: 1px solid #ff4757;
 }
+.glass-container img {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
