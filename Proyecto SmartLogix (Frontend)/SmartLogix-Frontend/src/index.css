@@ -1,0 +1,44 @@
+
+
+:root {
+  --color-fondo-principal: #D3D3D3;
+  --color-fondo-secundario: #5E5E5E;
+  --color-encabezado: ;
+  --color-texto: #FFFFFF;
+  --color-texto-2: #D3D3D3;
+}
+
+body {
+  font-family: 'Trebuchet MS';
+  background-color: var(--color-fondo-principal);
+  background-position: center;
+  background-size: cover;
+}
+
+.navbar{
+  background-color: var(--color-fondo-secundario);
+}
+
+a {
+  text-decoration: none;
+}
+
+.text-navbar {
+  color: var(--color-texto);
+}
+
+.text-navbar:hover {
+  color: var(--color-texto-2)
+}
+
+.text-white {
+  color: var(--color-texto);
+}
+
+.footer {
+  background-color: var(--color-fondo-secundario);
+}
+
+.card-gray {
+  background-color: var(--color-fondo-secundario);
+}
