@@ -1,20 +1,23 @@
 package com.storechain.inventory.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor 
 public class Product {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String code;
-
-    private String name;
-
-    private int stock;
+    @NonNull private String code;
+    @NonNull private String title;
+    @NonNull private String description;
+    @NonNull private Double stock;
+    @NonNull private Double price;
+    @NonNull
+    private String imageSrc;
 }

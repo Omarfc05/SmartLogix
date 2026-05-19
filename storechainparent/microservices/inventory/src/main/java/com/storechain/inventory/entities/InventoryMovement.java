@@ -2,10 +2,14 @@ package com.storechain.inventory.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor; // 🔥 IMPORTANTE
+import lombok.AllArgsConstructor; // Opcional pero recomendado
 import java.time.LocalDateTime;
 
 @Entity
 @Data
+@NoArgsConstructor // 🔥 Agrega esto para que 'new InventoryMovement()' funcione
+@AllArgsConstructor
 @Table(name = "inventory_movements")
 public class InventoryMovement {
 
@@ -13,12 +17,10 @@ public class InventoryMovement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // IN para ingresos, OUT para salidas
     private String movementType;
-
     private Integer quantity;
     private LocalDateTime createdAt;
-    private String reason; // Ej: "Reposición manual", "Orden de compra ORD-123"
+    private String reason;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")

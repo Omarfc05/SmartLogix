@@ -46,7 +46,7 @@ public class InventoryService {
                         HttpStatus.NOT_FOUND,
                         "Producto no encontrado"));
 
-        int newStock = product.getStock() + quantity;
+        Double newStock = product.getStock() + quantity;
 
         if (newStock < 0) {
             throw new BusinessRuleException("1004",

@@ -16,6 +16,7 @@ public class Shipment {
     private String address;
     private String carrier;
     private String estimatedDate;
+    private String client;
 
     private String status; // PENDIENTE, EN_TRANSITO, ENTREGADO
 }

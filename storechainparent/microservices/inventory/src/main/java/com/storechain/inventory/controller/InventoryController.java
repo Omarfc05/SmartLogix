@@ -55,11 +55,13 @@ public class InventoryController {
         return repository.findAll().stream().map(p -> {
             ProductResponse dto = new ProductResponse();
             dto.setId(p.getId());
-            dto.setTitle(p.getName());
-            dto.setDescription("Producto disponible");
-            dto.setPrice(1000.0);
-            dto.setImageSrc("https://via.placeholder.com/150");
-            dto.setStock(p.getStock());
+            dto.setTitle(p.getTitle());
+            dto.setDescription(p.getDescription());
+            dto.setPrice(p.getPrice());
+            dto.setImageSrc(p.getImageSrc());       // 🔥 Ahora sí traerá el dato
+
+            // Aseguramos que el stock no sea null
+            dto.setStock(p.getStock() != null ? p.getStock().intValue() : 0);
             return dto;
         }).toList();
     }

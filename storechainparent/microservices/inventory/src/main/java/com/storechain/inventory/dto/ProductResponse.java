@@ -9,5 +9,5 @@ public class ProductResponse {
     private String description;
     private Double price;
     private String imageSrc;
-    private Integer stock;
+    private int stock;
 }
