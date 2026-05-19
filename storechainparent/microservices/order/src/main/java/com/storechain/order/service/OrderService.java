@@ -35,10 +35,52 @@ public class OrderService {
                 throw new BusinessRuleException("2004", HttpStatus.BAD_REQUEST, "Cantidad inválida");
             }
 
+            try {
+                // Consultar producto en Inventory
+                InventoryResponse product = webClientBuilder.build()
+                        .get()
+                        .uri("http://localhost:8086/inventory/v1/{id}", detail.getProductId())
+                        .retrieve()
+                        .bodyToMono(InventoryResponse.class)
+                        .block();
+
+                if (product == null) {
+                    throw new BusinessRuleException("2002", HttpStatus.NOT_FOUND, "Producto no existe");
+                }
+
+                // Validar stock
+                if (product.getStock() < detail.getQuantity()) {
+                    throw new BusinessRuleException("2003", HttpStatus.BAD_REQUEST, "Stock insuficiente");
+                }
+
+                // DESCONTAR STOCK
+                webClientBuilder.build()
+                        .put()
+                        .uri(uriBuilder -> uriBuilder
+                                .scheme("http")
+                                .host("localhost")
+                                .port(8086)
+                                .path("/inventory/v1/{id}/stock")
+                                .queryParam("quantity", -detail.getQuantity())
+                                .build(detail.getProductId()))
+                        .retrieve()
+                        .bodyToMono(Void.class)
+                        .block();
+
+            } catch (Exception ex) {
+                ex.printStackTrace(); // 👈 para ver errores reales
+                throw new BusinessRuleException(
+                        "5020",
+                        HttpStatus.BAD_GATEWAY,
+                        "Error comunicando con Inventory"
+                );
+            }
+
+            // relación
             detail.setOrder(order);
-            order.setOrderNumber(generateOrderNumber());
         }
 
+        order.setOrderNumber(generateOrderNumber());
         order.setStatus("CREADO");
 
         return orderRepository.save(order);
@@ -72,6 +114,24 @@ public class OrderService {
                             "2005",
                             HttpStatus.BAD_REQUEST,
                             "Solo pedidos en estado CREADO pueden aprobarse"
+                    );
+                }
+
+                // 🔥 LLAMADA A SHIPMENT
+                try {
+                    webClientBuilder.build()
+                            .post()
+                            .uri("http://localhost:8087/shipment/v1")
+                            .bodyValue(order)
+                            .retrieve()
+                            .bodyToMono(Void.class)
+                            .block();
+
+                } catch (Exception ex) {
+                    throw new BusinessRuleException(
+                            "5030",
+                            HttpStatus.BAD_GATEWAY,
+                            "Error comunicando con Shipment"
                     );
                 }
 

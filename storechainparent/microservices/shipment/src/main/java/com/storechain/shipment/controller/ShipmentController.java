@@ -20,7 +20,12 @@ public class ShipmentController {
     private ShipmentRepository repository;
 
     @PostMapping
-    public ResponseEntity<Shipment> create(@RequestBody Shipment shipment) {
+    public ResponseEntity<Shipment> create(@RequestBody com.storechain.shipment.dto.OrderRequest order) {
+
+        Shipment shipment = new Shipment();
+        shipment.setOrderId(order.getId());
+        shipment.setStatus("ENVIADO");
+
         return ResponseEntity.ok(service.create(shipment));
     }
 

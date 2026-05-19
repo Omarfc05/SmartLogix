@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="apiGateway" />
         <module name="keyCloakAdapter" />
+        <module name="bff" />
         <module name="eurekaServer" />
         <module name="springBootAdmin1" />
       </profile>
@@ -18,26 +19,9 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.44/lombok-1.18.44.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.44/lombok-1.18.44.jar" />
-        </processorPath>
-        <module name="order" />
-      </profile>
-      <profile name="Annotation profile for inventory" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.44/lombok-1.18.44.jar" />
         </processorPath>
         <module name="inventory" />
-      </profile>
-      <profile name="Annotation profile for shipment" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.44/lombok-1.18.44.jar" />
-        </processorPath>
+        <module name="order" />
         <module name="shipment" />
       </profile>
     </annotationProcessing>
@@ -45,6 +29,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="apiGateway" options="-parameters" />
+      <module name="bff" options="-parameters" />
       <module name="keyCloakAdapter" options="-parameters" />
     </option>
   </component>
