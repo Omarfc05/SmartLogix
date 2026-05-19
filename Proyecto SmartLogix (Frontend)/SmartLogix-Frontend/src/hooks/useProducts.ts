@@ -6,15 +6,23 @@ export const useProducts = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const load = async () => {
+    //  Separamos la función para poder llamarla desde afuera
+    const fetchProducts = async () => {
+        setLoading(true);
+        try {
             const data = await getProducts();
             setProducts(data);
+        } catch (error) {
+            console.error("Error obteniendo productos", error);
+        } finally {
             setLoading(false);
-        };
+        }
+    };
 
-        load();
+    useEffect(() => {
+        fetchProducts();
     }, []);
 
-    return { products, loading };
+    // 🔥 Ahora exportamos fetchProducts también
+    return { products, loading, fetchProducts };
 };

@@ -38,6 +38,9 @@ export const Navbar = () => {
                         <li className="nav-item">
                             <NavLink className="nav-link text-primary" to="/products">Productos</NavLink>
                         </li>
+                        <li className="nav-item">
+                            <NavLink className="nav-link text-warning fw-bold" to="/admin">⚙️ Admin</NavLink>
+                        </li>
                     </ul>
 
                     {/* CART BUTTON */}

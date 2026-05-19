@@ -24,7 +24,7 @@ public class ShipmentController {
 
         Shipment shipment = new Shipment();
         shipment.setOrderId(order.getId());
-        shipment.setStatus("ENVIADO");
+        shipment.setAddress(order.getAddress()); // 🔥 PASAMOS LA DIRECCIÓN DINÁMICA
 
         return ResponseEntity.ok(service.create(shipment));
     }

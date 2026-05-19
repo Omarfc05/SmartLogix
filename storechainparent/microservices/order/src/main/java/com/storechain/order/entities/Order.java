@@ -15,6 +15,7 @@ public class Order {
 
     private String orderNumber;
     private String client;
+    private String address;
     private String status;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)

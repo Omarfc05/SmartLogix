@@ -6,15 +6,24 @@ export const ProcederAlPago = () => {
     const { items, totalAmount, formatCLP } = useCar();
     const { pay } = useCheckout();
 
+    // Estados para el formulario
+    const [clientName, setClientName] = useState("");
+    const [address, setAddress] = useState("");
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
 
     const handlePay = async () => {
+        if (!clientName || !address) {
+            setError("Por favor, ingresa tu nombre y dirección.");
+            return;
+        }
+
         setLoading(true);
         setError(null);
         try {
-            await pay();
+            await pay(clientName, address); // Enviamos los datos reales
             setSuccess(true);
         } catch (e) {
             setError("No se pudo procesar el pago. Verifica los microservicios.");
@@ -37,6 +46,27 @@ export const ProcederAlPago = () => {
             <div className="glass-container w-100" style={{ maxWidth: '600px' }}>
                 <h2 className="fw-bold text-center mb-4" style={{ color: '#0077b6' }}>Checkout Seguro</h2>
 
+                {/* 🔥 FORMULARIO DE ENVÍO */}
+                {!success && (
+                    <div className="mb-4 text-start">
+                        <h5 className="fw-bold text-muted mb-3">Datos de Envío</h5>
+                        <input
+                            type="text"
+                            className="form-control mb-3 glossy-card border-0"
+                            placeholder="Tu Nombre Completo"
+                            value={clientName}
+                            onChange={(e) => setClientName(e.target.value)}
+                        />
+                        <input
+                            type="text"
+                            className="form-control mb-3 glossy-card border-0"
+                            placeholder="Dirección de Envío (Ej: Los Leones 123)"
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                        />
+                    </div>
+                )}
+
                 <div className="mb-4">
                     {items.map((i) => (
                         <div key={i.id} className="d-flex justify-content-between align-items-center p-3 mb-2 glossy-card">
@@ -55,8 +85,8 @@ export const ProcederAlPago = () => {
 
                 {success ? (
                     <div className="alert alert-success rounded-4 shadow-sm border-0 text-center">
-                        <h4 className="fw-bold mb-1">¡Pago exitoso!</h4>
-                        <p className="mb-0">Tu orden ha sido creada y enviada al servidor.</p>
+                        <h4 className="fw-bold mb-1">¡Pago exitoso, {clientName}!</h4>
+                        <p className="mb-0">Tu orden va en camino a: <strong>{address}</strong></p>
                     </div>
                 ) : (
                     <button
@@ -64,7 +94,7 @@ export const ProcederAlPago = () => {
                         onClick={handlePay}
                         disabled={loading}
                     >
-                        {loading ? "Procesando de forma segura..." : "Confirmar y Pagar"}
+                        {loading ? "Procesando..." : "Confirmar y Pagar"}
                     </button>
                 )}
             </div>

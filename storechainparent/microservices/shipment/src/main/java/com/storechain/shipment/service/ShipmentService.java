@@ -16,19 +16,12 @@ public class ShipmentService {
     private ShipmentRepository repository;
 
     public Shipment create(Shipment shipment) {
-
         if (shipment.getOrderId() == null) {
-            throw new BusinessRuleException(
-                    "3001",
-                    HttpStatus.BAD_REQUEST,
-                    "OrderId es obligatorio"
-            );
+            throw new BusinessRuleException("3001", HttpStatus.BAD_REQUEST, "OrderId es obligatorio");
         }
 
-        // Estado inicial y datos de envío predeterminados
         shipment.setStatus("ENVIADO");
-        shipment.setAddress("Avenida Siempreviva 742"); // Simulamos una dirección
-        shipment.setCarrier("Chile Express"); // Transportista simulado
+        shipment.setCarrier("Chile Express");
         shipment.setEstimatedDate(String.valueOf(LocalDate.now().plusDays(3)));
 
         return repository.save(shipment);

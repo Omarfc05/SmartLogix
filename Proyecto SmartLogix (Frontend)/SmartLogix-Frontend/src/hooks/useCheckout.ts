@@ -2,12 +2,13 @@ import { checkout } from "../services/checkoutService";
 import { useCar } from "../contexts/CartContext";
 
 export const useCheckout = () => {
-    const { items, clearCart } = useCar(); // Quitamos totalAmount porque tu backend no lo pide
+    const { items, clearCart } = useCar();
 
-    const pay = async () => {
-        // 🔥 AQUÍ ARREGLAMOS EL PAYLOAD
+    // Ahora recibe el nombre y la dirección por parámetro
+    const pay = async (clientName: string, clientAddress: string) => {
         const payload = {
-            client: "Cliente Web", // Puedes poner un string fijo por ahora
+            client: clientName,
+            address: clientAddress, // 🔥 NUEVO CAMPO
             details: items.map((i) => ({
                 productId: i.id,
                 quantity: i.qty,
@@ -15,9 +16,7 @@ export const useCheckout = () => {
         };
 
         const order = await checkout(payload);
-
         clearCart();
-
         return order;
     };
 
