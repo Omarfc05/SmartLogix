@@ -18,7 +18,7 @@ public class BffController {
         // 1. El BFF le pega primero al Microservicio de Inventario para validar/restar stock
         return webClientBuilder.build()
             .post()
-            .uri("http://INVENTORY-SERVICE/api/inventory/validate")
+            .uri("http://MICROSERVICES-INVENTORY/api/inventory/validate")
             .bodyValue(carritoData)
             .retrieve()
             .bodyToMono(String.class)
@@ -26,7 +26,7 @@ public class BffController {
                 // 2. Si el inventario responde OK, el BFF llama inmediatamente a Pedidos
                 return webClientBuilder.build()
                     .post()
-                    .uri("http://ORDER-SERVICE/api/orders/create")
+                    .uri("http://MICROSERVICES-ORDER/api/orders/create")
                     .bodyValue(carritoData)
                     .retrieve()
                     .bodyToMono(String.class);
