@@ -1,42 +1,54 @@
+import { useState } from "react";
 import { useCar } from "../contexts/CartContext";
+import { useCheckout } from "../hooks/useCheckout";
 
-export default function PaginaCarritoPruebas() {
-  const { items, clearCart,} = useCar();
+export const ProcederAlPago = () => {
+    const { items, totalAmount, formatCLP, clearCart } = useCar();
+    const { pay } = useCheckout();
 
-  const manejarPagoBackend = async () => {
-    // URL de tu API Gateway (Ajusta el puerto si tu Gateway usa otro, ej: 8080)
-    const GATEWAY_URL = "http://localhost:8089/api/bff/checkout/procesar";
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState(false);
 
-    try {
-      const response = await fetch(GATEWAY_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // Aquí iría el token de Keycloak si ya lo tienes integrado:
-          // "Authorization": `Bearer ${token}` 
-        },
-        body: JSON.stringify(items), // Enviamos la lista de productos del carrito
-      });
+    const handlePay = async () => {
+        setLoading(true);
+        setError(null);
 
-      if (!response.ok) {
-        throw new Error(`Error en la petición: ${response.status}`);
-      }
+        try {
+            await pay(); // 👈 así, sin params
+            setSuccess(true);
+        } catch (e) {
+            setError("No se pudo procesar el pago");
+        } finally {
+            setLoading(false);
+        }
+    };
 
-      const mensajeServidor = await response.text();
-      alert(`Respuesta del Sistema: ${mensajeServidor}`);
-      
-      // Si la compra fue exitosa, limpiamos el carrito en el frontend
-      if (!mensajeServidor.includes("Error")) {
-          clearCart();
-      }
+    return (
+        <div className="container mt-4">
+            <h2>Checkout</h2>
 
-    } catch (error) {
-      console.error("Error en el laboratorio de pruebas:", error);
-      alert("No se pudo procesar el pago. Revisa si el API Gateway y el BFF están encendidos.");
-    }
-  };
+            {items.map((i) => (
+                <div key={i.id} className="d-flex justify-content-between">
+                    <span>{i.title} x {i.qty}</span>
+                    <span>{formatCLP(i.price * i.qty)}</span>
+                </div>
+            ))}
 
-  // ... (Tu código de renderizado del carrito que ya funciona)
-  // En tu botón de "Proceder al pago", asegúrate de asignarle la función:
-  // <button className="btn btn-success" onClick={manejarPagoBackend}>Proceder al pago</button>
-}
+            <hr />
+
+            <h3>Total: {formatCLP(totalAmount)}</h3>
+
+            {error && <div className="alert alert-danger">{error}</div>}
+            {success && <div className="alert alert-success">Pago exitoso</div>}
+
+            <button
+                className="btn btn-primary mt-3"
+                onClick={handlePay}
+                disabled={loading}
+            >
+                {loading ? "Procesando..." : "Pagar"}
+            </button>
+        </div>
+    );
+};

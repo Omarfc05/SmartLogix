@@ -1,6 +1,8 @@
 package com.storechain.inventory.controller;
 
+import com.storechain.inventory.dto.ProductResponse;
 import com.storechain.inventory.entities.Product;
+import com.storechain.inventory.repository.ProductRepository;
 import com.storechain.inventory.service.InventoryService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +17,9 @@ public class InventoryController {
     @Autowired
     private InventoryService service;
 
+    @Autowired
+    private ProductRepository repository;
 
-    @GetMapping
-    public ResponseEntity<List<Product>> list() {
-        return ResponseEntity.ok(service.getAll());
-    }
 
 
     @GetMapping("/{id}")
@@ -47,6 +47,20 @@ public class InventoryController {
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public List<ProductResponse> getAll() {
+        return repository.findAll().stream().map(p -> {
+            ProductResponse dto = new ProductResponse();
+            dto.setId(p.getId());
+            dto.setTitle(p.getName());
+            dto.setDescription("Producto disponible");
+            dto.setPrice(1000.0);
+            dto.setImageSrc("https://via.placeholder.com/150");
+            dto.setStock(p.getStock());
+            return dto;
+        }).toList();
     }
 
 }

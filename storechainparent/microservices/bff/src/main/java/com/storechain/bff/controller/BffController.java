@@ -1,35 +1,38 @@
 package com.storechain.bff.controller;
 
+import com.storechain.bff.dto.CheckoutRequest;
+import com.storechain.bff.dto.OrderRequest;
+import com.storechain.bff.dto.OrderResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-
+@RestController
+@RequestMapping("/bff/v1")
 public class BffController {
-        
+
     @Autowired
     private WebClient.Builder webClientBuilder;
 
-    @PostMapping("/procesar")
-    public Mono<String> procesarCompra(@RequestBody Object carritoData) {
-        
-        // 1. El BFF le pega primero al Microservicio de Inventario para validar/restar stock
+    @PostMapping("/order")
+    public Mono<OrderResponse> create(@RequestBody OrderRequest order) {
+
         return webClientBuilder.build()
-            .post()
-            .uri("http://MICROSERVICES-INVENTORY/api/inventory/validate")
-            .bodyValue(carritoData)
-            .retrieve()
-            .bodyToMono(String.class)
-            .flatMap(resultadoStock -> {
-                // 2. Si el inventario responde OK, el BFF llama inmediatamente a Pedidos
-                return webClientBuilder.build()
-                    .post()
-                    .uri("http://MICROSERVICES-ORDER/api/orders/create")
-                    .bodyValue(carritoData)
-                    .retrieve()
-                    .bodyToMono(String.class);
-            });
+                .post()
+                .uri("http://localhost:8089/api/order/v1")
+                .bodyValue(order)
+                .retrieve()
+                .bodyToMono(OrderResponse.class);
+    }
+    @PostMapping("/checkout")
+    public Mono<OrderResponse> checkout(@RequestBody CheckoutRequest request) {
+
+        return webClientBuilder.build()
+                .post()
+                .uri("http://localhost:8089/api/order/v1")
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(OrderResponse.class);
     }
 }

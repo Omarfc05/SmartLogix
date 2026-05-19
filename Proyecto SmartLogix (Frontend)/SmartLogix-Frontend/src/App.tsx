@@ -1,22 +1,21 @@
-import { Route, Routes} from "react-router-dom"
-import { Home } from "./pages/Home"
-import { Layout } from "./layout/Layout" 
-import { Test } from "./pages/Test"
-import { Products } from "./pages/Products"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Home } from "./pages/Home";
+import { Products } from "./pages/Products";
+import { Cart } from "./pages/Cart";
+import { ProcederAlPago } from "./pages/ProcederAlPago";
+import { Navbar } from "./components/Navbar";
 
-function App() {
+export default function App() {
+    return (
+        <BrowserRouter>
+            <Navbar />
 
-  return (
-    <>
-      <Routes>
-        <Route element={<Layout />}>
-        <Route path="/" element={<Home />}/>
-        <Route path="/test" element={<Test />}/>
-        <Route path="/products" element={<Products />}/>
-        </Route>
-      </Routes>
-    </>
-  )
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<ProcederAlPago />} />
+            </Routes>
+        </BrowserRouter>
+    );
 }
-
-export default App

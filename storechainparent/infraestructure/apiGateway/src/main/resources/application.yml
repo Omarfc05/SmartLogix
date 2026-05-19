@@ -1,20 +1,47 @@
 server:
   port: 8089
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka
-logging:
-  level:
-    org.springframework.gateway: DEBUG
-    reactor.netty.http.client: DEBUG
+
+
 spring:
   cloud:
     gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:5173"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
       routes:
+
         - id: inventory_service
           uri: lb://microservices-inventory
           predicates:
-            - Path=/**
+            - Path=/api/inventory/**
           filters:
-            - AuthenticationFilterinig
+            - StripPrefix=1
+
+        - id: order_service
+          uri: lb://microservices-order
+          predicates:
+            - Path=/api/order/**
+          filters:
+            - StripPrefix=1
+
+        - id: shipment_service
+          uri: lb://microservices-shipment
+          predicates:
+            - Path=/api/shipment/**
+          filters:
+            - StripPrefix=1
+
+        - id: bff_service
+          uri: lb://microservices-bff
+          predicates:
+            - Path=/api/bff/**
+          filters:
+            - StripPrefix=1
