@@ -4,27 +4,33 @@ export const Home = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="container text-light py-5">
-            <h1>Bienvenido a SmartLogix 🛒</h1>
+        <div className="container py-5 d-flex justify-content-center">
+            <div className="glass-container text-center text-dark" style={{ maxWidth: '700px' }}>
+                <h1 className="display-4 fw-bold mb-3" style={{ color: '#0077b6' }}>
+                    Bienvenido a SmartLogix 🍃
+                </h1>
 
-            <p className="mt-3">
-                Sistema de ecommerce con microservicios (Inventory, Order, BFF)
-            </p>
+                <p className="lead mb-5 text-muted fw-medium">
+                    Sistema de ecommerce potenciado por microservicios de última generación.
+                    Rápido, fluido y transparente.
+                </p>
 
-            <div className="mt-4 d-flex gap-3">
-                <button
-                    className="btn btn-primary"
-                    onClick={() => navigate("/products")}
-                >
-                    Ver Productos
-                </button>
+                <div className="d-flex justify-content-center gap-4 mt-4">
+                    <button
+                        className="btn btn-bubble px-5 py-3 fs-5"
+                        onClick={() => navigate("/products")}
+                    >
+                        Explorar Catálogo
+                    </button>
 
-                <button
-                    className="btn btn-success"
-                    onClick={() => navigate("/checkout")}
-                >
-                    Ir al Checkout
-                </button>
+                    <button
+                        className="btn btn-outline-primary rounded-pill px-4 py-3 fw-bold bg-white"
+                        style={{ border: '2px solid #00a8ff' }}
+                        onClick={() => navigate("/checkout")}
+                    >
+                        Ir al Checkout
+                    </button>
+                </div>
             </div>
         </div>
     );

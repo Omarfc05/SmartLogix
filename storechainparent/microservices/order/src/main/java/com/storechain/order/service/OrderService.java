@@ -31,8 +31,8 @@ public class OrderService {
 
         for (OrderDetail detail : order.getDetails()) {
 
-            if (detail.getQuantity() <= 0) {
-                throw new BusinessRuleException("2004", HttpStatus.BAD_REQUEST, "Cantidad inválida");
+            if (order.getDetails() == null || order.getDetails().isEmpty()) {
+                throw new BusinessRuleException("2001", HttpStatus.BAD_REQUEST, "Pedido sin productos");
             }
 
             try {

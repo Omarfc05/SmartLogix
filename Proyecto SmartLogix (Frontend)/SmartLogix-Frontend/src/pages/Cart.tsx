@@ -23,68 +23,46 @@ export const Cart = () => {
         );
     }
 
+    // Dentro de Cart.tsx
     return (
-        <div className="container text-light p-4">
-            <h2>🛒 Tu carrito</h2>
+        <div className="container mt-5">
+            <div className="glass-container">
+                <h2 className="mb-4">🛒 Tu carrito</h2>
 
-            <div className="mt-4">
-                {items.map((item) => (
-                    <div
-                        key={item.id}
-                        className="d-flex justify-content-between align-items-center border p-3 mb-2 rounded bg-dark"
-                    >
-                        <div>
-                            <h5>{item.title}</h5>
-                            <p className="mb-1">{formatCLP(item.price)}</p>
-                            <small>Cantidad: {item.qty}</small>
+                <div className="mt-4">
+                    {items.map((item) => (
+                        <div
+                            key={item.id}
+                            className="d-flex justify-content-between align-items-center p-3 mb-3 glossy-card"
+                        >
+                            <div>
+                                <h5 className="mb-1">{item.title}</h5>
+                                <p className="mb-1 text-primary fw-bold">{formatCLP(item.price)}</p>
+                                <small className="text-muted">Cantidad: {item.qty}</small>
+                            </div>
+
+                            <div className="d-flex gap-2 align-items-center">
+                                <button className="btn btn-sm btn-outline-secondary rounded-circle px-2" onClick={() => removeOne(item.id)}>-</button>
+                                <span className="fw-bold mx-2">{item.qty}</span>
+                                <button className="btn btn-sm btn-outline-primary rounded-circle px-2" onClick={() => addToCar(item)}>+</button>
+                                <button className="btn btn-sm btn-bubble-danger ms-3" onClick={() => removeAllItem(item.id)}>Eliminar</button>
+                            </div>
                         </div>
+                    ))}
+                </div>
 
-                        <div className="d-flex gap-2 align-items-center">
-                            <button
-                                className="btn btn-sm btn-secondary"
-                                onClick={() => removeOne(item.id)}
-                            >
-                                -
-                            </button>
+                <hr className="my-4" style={{ borderColor: 'rgba(0,0,0,0.1)' }} />
 
-                            <span>{item.qty}</span>
+                <h4 className="fw-bold">Total: {formatCLP(totalAmount)}</h4>
 
-                            <button
-                                className="btn btn-sm btn-secondary"
-                                onClick={() => addToCar(item)}
-                            >
-                                +
-                            </button>
-
-                            <button
-                                className="btn btn-sm btn-danger"
-                                onClick={() => removeAllItem(item.id)}
-                            >
-                                eliminar
-                            </button>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            <hr />
-
-            <h4>Total: {formatCLP(totalAmount)}</h4>
-
-            <div className="d-flex gap-2 mt-3">
-                <button
-                    className="btn btn-outline-danger"
-                    onClick={clearCart}
-                >
-                    Vaciar carrito
-                </button>
-
-                <button
-                    className="btn btn-success"
-                    onClick={() => navigate("/checkout")}
-                >
-                    Proceder al pago
-                </button>
+                <div className="d-flex gap-3 mt-4">
+                    <button className="btn btn-outline-danger rounded-pill px-4" onClick={clearCart}>
+                        Vaciar carrito
+                    </button>
+                    <button className="btn btn-bubble" onClick={() => navigate("/checkout")}>
+                        Proceder al pago
+                    </button>
+                </div>
             </div>
         </div>
     );
