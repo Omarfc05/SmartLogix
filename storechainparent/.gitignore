@@ -1,0 +1,20 @@
+# Node
+node_modules/
+npm-debug.log
+.npm/
+
+# Java/Maven
+target/
+*.class
+*.jar
+.settings/
+.classpath
+.project
+
+# IntelliJ
+.idea/
+*.iml
+
+# Cypress
+cypress/videos/
+cypress/screenshots/

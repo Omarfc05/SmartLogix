@@ -11,10 +11,11 @@
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>17</java.version>
+        <java.version>24</java.version>
         <spring.boot.version>4.0.3</spring.boot.version>
         <springdoc.version>3.0.2</springdoc.version>
-        <maven.compiler.plugin.version>3.14.1</maven.compiler.plugin.version>
+        <maven.compiler.source>24</maven.compiler.source>
+        <maven.compiler.target>24</maven.compiler.target>
         <spring-cloud.version>2025.1.1</spring-cloud.version>
     </properties>
     <dependencyManagement>
@@ -52,17 +53,18 @@
     <artifactId>spring-boot-starter-web</artifactId>
 </dependency>
      </dependencies>
-     <build>
+    <build>
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven.compiler.plugin.version}</version>
-                    <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
-                    </configuration>
+                    <version>3.14.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>4.0.3</version>
                 </plugin>
             </plugins>
         </pluginManagement>
