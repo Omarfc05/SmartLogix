@@ -1,0 +1,132 @@
+services:
+  # --- BROKER DE MENSAJERÍA ---
+  rabbitmq:
+    image: rabbitmq:4.2-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"   # Puerto AMQP
+      - "15672:15672" # Interfaz Web de Gestión
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - smartlogix-net
+
+  # --- INFRAESTRUCTURA DE BACKEND ---
+  eureka-server:
+    build:
+      context: ./storechainparent
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: infraestructure/eurekaServer/target/*.jar
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - smartlogix-net
+
+  api-gateway:
+    build:
+      context: ./storechainparent
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: infraestructure/apiGateway/target/*.jar
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+    networks:
+      - smartlogix-net
+
+  keycloak-adapter:
+    build:
+      context: ./storechainparent
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: infraestructure/keyCloakAdapter/target/*.jar
+    container_name: keycloak-adapter
+    depends_on:
+      - eureka-server
+    networks:
+      - smartlogix-net
+
+  # --- MICROSERVICIOS DE NEGOCIO ---
+  bff-service:
+    build:
+      context: ./storechainparent
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: microservices/bff/target/*.jar
+    container_name: bff-service
+    depends_on:
+      - eureka-server
+      - rabbitmq
+    networks:
+      - smartlogix-net
+
+  inventory-service:
+    build:
+      context: ./storechainparent
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: microservices/inventory/target/*.jar
+    container_name: inventory-service
+    depends_on:
+      - eureka-server
+      - rabbitmq
+    networks:
+      - smartlogix-net
+
+  order-service:
+    build:
+      context: ./storechainparent
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: microservices/order/target/*.jar
+    container_name: order-service
+    depends_on:
+      - eureka-server
+      - rabbitmq
+    networks:
+      - smartlogix-net
+
+  shipment-service:
+    build:
+      context: ./storechainparent
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: microservices/shipment/target/*.jar
+    container_name: shipment-service
+    depends_on:
+      - eureka-server
+      - rabbitmq
+    networks:
+      - smartlogix-net
+
+  # --- FRONTEND ---
+  frontend:
+    build:
+      context: './Proyecto SmartLogix (Frontend)/SmartLogix-Frontend'
+      dockerfile: Dockerfile
+    container_name: smartlogix-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - api-gateway
+    networks:
+      - smartlogix-net
+
+volumes:
+  rabbitmq_data:
+
+networks:
+  smartlogix-net:
+    driver: bridge
